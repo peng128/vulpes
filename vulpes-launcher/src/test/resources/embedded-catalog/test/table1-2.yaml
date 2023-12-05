@@ -1,0 +1,9 @@
+schema:
+  id: int(4)
+  name: varchar(255)
+  age: bigint(19)
+  gender: varchar(255)
+  phone: int(4)
+files:
+  - data/table1.csv
+format: CSV

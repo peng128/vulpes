@@ -1,0 +1,10 @@
+schema:
+  id: int(4)
+  g: int(4)
+  h: varchar(255)
+  y: int
+  r: varchar(255)
+files:
+  - 1
+  - 2
+format: CSV

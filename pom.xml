@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.peng</groupId>
+    <artifactId>vulpes</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>vulpes-parser</module>
+        <module>catalog-manager</module>
+        <module>vulpes-common</module>
+        <module>vulpes-runtime</module>
+        <module>vulpes-test-kit</module>
+        <module>vulpes-jdbc-server-mysql</module>
+        <module>vulpes-launcher</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <antlr4.version>4.13.0</antlr4.version>
+        <junit.version>4.13.1</junit.version>
+        <lombok.version>1.18.28</lombok.version>
+        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <jackson.dataformate.yaml.version>2.15.2</jackson.dataformate.yaml.version>
+        <slf4j.api.version>2.0.9</slf4j.api.version>
+        <log4j.version>2.20.0</log4j.version>
+        <guava.version>32.1.2-jre</guava.version>
+        <arrow.version>13.0.0</arrow.version>
+        <netty.version>4.1.100.Final</netty.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>10.12.3</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <consoleOutput>true</consoleOutput>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <configLocation>config/google_checks.xml</configLocation>
+<!--                    <logViolationsToConsole>true</logViolationsToConsole>-->
+                    <violationSeverity>warning</violationSeverity>
+<!--                    <failOnViolation>true</failOnViolation>-->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M6</version>
+                <configuration>
+                    <argLine>--add-opens=java.base/java.nio=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

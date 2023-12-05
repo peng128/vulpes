@@ -1,0 +1,14 @@
+schema:
+  id: int(4)
+  a: int(4)
+  b: varchar(255)
+  c: int
+  d: int(4)
+  e: varchar(255)
+  s: varchar(255)
+  aasd: varchar(255)
+  g: int(3)
+files:
+  - 1
+  - 2
+format: CSV

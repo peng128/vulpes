@@ -1,0 +1,1 @@
+select age, gender from table1 where id = 3

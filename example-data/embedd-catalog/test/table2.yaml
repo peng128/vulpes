@@ -1,0 +1,6 @@
+schema:
+  id: int(4)
+  type: varchar(255)
+files:
+  - data/table2.csv
+format: CSV

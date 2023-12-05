@@ -1,0 +1,2 @@
+-RelalgProjection(projects=[*])
+  -RelalgScan(tableIdentifier=embedded-catalog.test.table1)

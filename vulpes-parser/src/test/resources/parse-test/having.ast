@@ -1,0 +1,5 @@
+-RelalgLimit(limit=10)
+  -RelalgSelection(predicate=<(t,10))
+    -RelalgAggregation(aggFunctions=[SUM(a) as t], groupBys=[e, b])
+      -RelalgSelection(predicate=OR(AND(=(a,-(d,1)),AND(>(s,3),<(s,4))),>(g,5)))
+        -RelalgScan(tableIdentifier=embedded-catalog.test.table1)

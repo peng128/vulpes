@@ -1,0 +1,6 @@
+-RelalgLimit(limit=100)
+  -RelalgSort(items=[SortExpr(expr=j, sortKind=ASC)])
+    -RelalgProjection(projects=[aasd, b, CASE(=(a,1),s) as casefunction, CAST(d,VARCHAR) as t])
+      -RelalgSelection(predicate=OR(AND(=(a,-(d,1)),AND(>(s,3),<(s,4))),>(g,5)))
+        -RelalgAlias(alias=t1)
+          -RelalgScan(tableIdentifier=embedded-catalog.database.table1)

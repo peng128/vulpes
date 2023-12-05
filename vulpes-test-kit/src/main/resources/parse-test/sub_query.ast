@@ -1,0 +1,6 @@
+-RelalgProjection(projects=[t1.t, count(1)])
+  -RelalgSelection(predicate==(i,2))
+    -RelalgAlias(alias=t1)
+      -RelalgAggregation(aggFunctions=[SUM(a) as t], groupBys=[axd(e) as i, b])
+        -RelalgSelection(predicate=OR(AND(=(a,-(d,1)),AND(>(s,3),<(s,4))),>(g,5)))
+          -RelalgScan(tableIdentifier=embedded-catalog.test.table1)

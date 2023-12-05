@@ -1,0 +1,1 @@
+select "name", age, gender from table1 where age = 24

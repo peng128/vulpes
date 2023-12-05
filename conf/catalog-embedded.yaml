@@ -1,0 +1,5 @@
+catalogs:
+  - name: embedded-catalog
+    type: embedded-catalog
+    prop:
+      catalog.embedded.file.path: example-data/embedded-catalog

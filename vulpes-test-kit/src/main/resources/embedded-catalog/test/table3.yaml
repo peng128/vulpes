@@ -1,0 +1,9 @@
+schema:
+  id: int(4)
+  h: varchar(255)
+  q: int(4)
+  s: varchar(255)
+files:
+  - 1
+  - 2
+format: CSV

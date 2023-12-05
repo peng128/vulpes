@@ -1,0 +1,1 @@
+select gender,sum(age) from table1 group by gender
