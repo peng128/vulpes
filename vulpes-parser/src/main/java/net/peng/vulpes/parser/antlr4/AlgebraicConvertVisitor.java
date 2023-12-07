@@ -31,10 +31,13 @@ import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
 import net.peng.vulpes.parser.algebraic.logical.RelalgProjection;
 import net.peng.vulpes.parser.algebraic.logical.RelalgScan;
 import net.peng.vulpes.parser.algebraic.logical.RelalgSelection;
-import net.peng.vulpes.parser.algebraic.logical.RelalgSet;
 import net.peng.vulpes.parser.algebraic.logical.RelalgSort;
 import net.peng.vulpes.parser.algebraic.logical.RelalgUnion;
 import net.peng.vulpes.parser.algebraic.logical.RelalgUnion.Type;
+import net.peng.vulpes.parser.algebraic.meta.RelalgSet;
+import net.peng.vulpes.parser.algebraic.meta.ShowCatalogMetaNode;
+import net.peng.vulpes.parser.algebraic.meta.ShowSchemaMetaNode;
+import net.peng.vulpes.parser.algebraic.meta.ShowTableMetaNode;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.BooleanFactorContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.BooleanPrimaryContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.BooleanTermContext;
@@ -55,6 +58,9 @@ import net.peng.vulpes.parser.antlr4.SQL92Parser.RowValueConstructorContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.SearchConditionContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.SelectListContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.SelectSublistContext;
+import net.peng.vulpes.parser.antlr4.SQL92Parser.ShowCatalogsContext;
+import net.peng.vulpes.parser.antlr4.SQL92Parser.ShowSchemasContext;
+import net.peng.vulpes.parser.antlr4.SQL92Parser.ShowTablesContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.SortSpecificationListContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.TableNameContext;
 import net.peng.vulpes.parser.antlr4.SQL92Parser.ValueExpressionContext;
@@ -78,6 +84,30 @@ public class AlgebraicConvertVisitor extends SQL92ParserBaseVisitor<RelationAlge
   @Override
   public RelationAlgebraic visitSetSpecification(SQL92Parser.SetSpecificationContext ctx) {
     return new RelalgSet(ctx.parameterName.getText(), ctx.parameterValue.getText());
+  }
+
+  /**
+   * 显示目录列表.
+   */
+  @Override
+  public RelationAlgebraic visitShowCatalogs(ShowCatalogsContext ctx) {
+    return new ShowCatalogMetaNode();
+  }
+
+  /**
+   * 显示当前目录下数据库列表.
+   */
+  @Override
+  public RelationAlgebraic visitShowSchemas(ShowSchemasContext ctx) {
+    return new ShowSchemaMetaNode();
+  }
+
+  /**
+   * 显示当前数据库下表列表.
+   */
+  @Override
+  public RelationAlgebraic visitShowTables(ShowTablesContext ctx) {
+    return new ShowTableMetaNode();
   }
 
   /**

@@ -91,7 +91,7 @@ public class ObjectUtils {
               .newInstance(input));
     } catch (ClassMissException | InstantiationException | IllegalAccessException
              | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-      throw new ClassMissException("找不到配置中的类 %s", e, className);
+      throw new ClassMissException("加载类时出现问题 %s", e, className);
     }
   }
 

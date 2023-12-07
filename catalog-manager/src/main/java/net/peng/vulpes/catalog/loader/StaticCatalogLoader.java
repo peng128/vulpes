@@ -1,6 +1,7 @@
 package net.peng.vulpes.catalog.loader;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.peng.vulpes.catalog.Catalog;
 import net.peng.vulpes.catalog.CatalogFactory;
@@ -44,5 +45,10 @@ public class StaticCatalogLoader implements CatalogLoader {
       throw new TableException("找不到目录[%s], 所有目录为[%s]", catalog, catalogs.keySet());
     }
     return catalogs.get(catalog);
+  }
+
+  @Override
+  public List<String> getCatalogNames() {
+    return catalogs.keySet().stream().toList();
   }
 }

@@ -3,8 +3,6 @@ package net.peng.vulpes.catalog.embedded;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.peng.vulpes.catalog.Catalog;
 import net.peng.vulpes.catalog.embedded.type.TypeConvertor;
 import net.peng.vulpes.catalog.table.TableMeta;
@@ -49,6 +47,17 @@ public class EmbeddedCatalog implements Catalog {
       dataTypes.add(TypeConvertor.convert(value));
     });
     return new EmbeddedTableMeta(fieldNames, dataTypes, meta.files(), meta.format);
+  }
+
+  @Override
+  public List<String> getTableNames(String schema) {
+    return FileHelper.listSubNames(String.format("%s/%s", catalogPath, schema)).stream()
+        .map(name -> name.split("\\.")[0]).toList();
+  }
+
+  @Override
+  public List<String> getSchemas() {
+    return FileHelper.listDirectoryNames(catalogPath);
   }
 
   private record TableMetaYamlObject(LinkedHashMap<String, String> schema, List<String> files,

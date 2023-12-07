@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.peng.vulpes.common.exception.ConfigMissingException;
 
@@ -33,5 +34,23 @@ public class FileHelper {
     } catch (IOException e) {
       throw new ConfigMissingException("找不到这个文件[%s],或转换这个类型报错[%s]", e, filePath, clazz.getName());
     }
+  }
+
+  /**
+   * 获取子目录名称列表.
+   */
+  public static List<String> listDirectoryNames(String path) {
+    // 创建 ObjectMapper 对象，并使用 YAMLFactory 初始化
+    final File file = new File(path);
+    return Arrays.stream(file.listFiles()).filter(File::isDirectory).map(File::getName).toList();
+  }
+
+  /**
+   * 获取目录下元素列表.
+   */
+  public static List<String> listSubNames(String path) {
+    // 创建 ObjectMapper 对象，并使用 YAMLFactory 初始化
+    final File file = new File(path);
+    return Arrays.stream(file.listFiles()).map(File::getName).toList();
   }
 }

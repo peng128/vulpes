@@ -40,7 +40,7 @@ public class End2EndTests extends PhysicsNodeTestBase {
     long start = System.currentTimeMillis();
     Config config = buildConfig();
     System.out.println("env " + (System.currentTimeMillis() - start) + " ms");
-    RelalgNode relalgNode = parse("sql1.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("sql1.sql", config);
     System.out.println("parse " + (System.currentTimeMillis() - start) + " ms");
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNodes = physicsNodeBuilder.build(relalgNode);
@@ -62,7 +62,7 @@ public class End2EndTests extends PhysicsNodeTestBase {
     long start = System.currentTimeMillis();
     Config config = buildConfig();
     System.out.println("env " + (System.currentTimeMillis() - start) + " ms");
-    RelalgNode relalgNode = parse("sql2.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("sql2.sql", config);
     System.out.println("parse " + (System.currentTimeMillis() - start) + " ms");
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNodes = physicsNodeBuilder.build(relalgNode);
@@ -83,7 +83,7 @@ public class End2EndTests extends PhysicsNodeTestBase {
     long start = System.currentTimeMillis();
     Config config = buildConfig();
     System.out.println("env " + (System.currentTimeMillis() - start) + " ms");
-    RelalgNode relalgNode = parse("sql3.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("sql3.sql", config);
     System.out.println("parse " + (System.currentTimeMillis() - start) + " ms");
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNodes = physicsNodeBuilder.build(relalgNode);
@@ -104,7 +104,7 @@ public class End2EndTests extends PhysicsNodeTestBase {
     long start = System.currentTimeMillis();
     Config config = buildConfig();
     System.out.println("env " + (System.currentTimeMillis() - start) + " ms");
-    RelalgNode relalgNode = parse("sql4.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("sql4.sql", config);
     System.out.println("parse " + (System.currentTimeMillis() - start) + " ms");
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNodes = physicsNodeBuilder.build(relalgNode);
@@ -129,7 +129,7 @@ public class End2EndTests extends PhysicsNodeTestBase {
     long start = System.currentTimeMillis();
     Config config = buildConfig();
     System.out.println("env " + (System.currentTimeMillis() - start) + " ms");
-    RelalgNode relalgNode = parse("parameter.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("parameter.sql", config);
     if (ObjectUtils.isEmpty(relalgNode.getRowHeader())
             && relalgNode instanceof SingleInputRelalgNode singleInputRelalgNode) {
       singleInputRelalgNode.setRowHeader(singleInputRelalgNode.computeOutputHeader(null));

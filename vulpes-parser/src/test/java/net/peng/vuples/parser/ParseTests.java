@@ -85,11 +85,11 @@ public class ParseTests {
     Properties properties = new Properties();
     properties.put(ConfigItems.SESSION_AUTO_INCREMENT.name(), 0L);
     RelalgNode relalgNode =
-            Parser.parse(ResourceFileUtils.getText("parse-test/" + inputSqlFileName), null,
-                    SessionManager.builder().config(new Config(properties))
-                            .currentCatalog("embedded-catalog").currentSchema("test").build());
+        (RelalgNode) Parser.parse(ResourceFileUtils.getText("parse-test/" + inputSqlFileName),
+            null, SessionManager.builder().config(new Config(properties))
+                .currentCatalog("embedded-catalog").currentSchema("test").build());
     Assert.assertEquals(replaceLastEnter(ResourceFileUtils.getText("parse-test/"
-            + outputExceptFileName)), replaceLastEnter(relalgNode.explain()));
+        + outputExceptFileName)), replaceLastEnter(relalgNode.explain()));
   }
 
   private String replaceLastEnter(String input) {
@@ -103,17 +103,17 @@ public class ParseTests {
   private void baseParseWithMetaTest(String inputSqlFileName, String outputExceptFileName) {
     Properties properties = new Properties();
     properties.put(ConfigItems.CATALOG_STATIC_CONFIG_FILE_PATH.name(),
-            ParseTests.class.getClassLoader().getResource("catalog-embedded.yaml").getFile());
+        ParseTests.class.getClassLoader().getResource("catalog-embedded.yaml").getFile());
     properties.put(ConfigItems.CATALOG_LOADER_CLASS.name(),
-            "net.peng.vulpes.catalog.loader.StaticCatalogLoader");
+        "net.peng.vulpes.catalog.loader.StaticCatalogLoader");
     properties.put(ConfigItems.SESSION_AUTO_INCREMENT.name(), 0L);
     Config config = new Config(properties);
     CatalogManager catalogManager = CatalogManagerFactory.newInstance(config);
-    RelalgNode relalgNode = Parser.parse(ResourceFileUtils
-                    .getText("parse-test/" + inputSqlFileName),
-            catalogManager, SessionManager.builder().config(config)
-                    .currentCatalog("embedded-catalog").currentSchema("test").build());
+    RelalgNode relalgNode = (RelalgNode) Parser.parse(ResourceFileUtils
+            .getText("parse-test/" + inputSqlFileName),
+        catalogManager, SessionManager.builder().config(config)
+            .currentCatalog("embedded-catalog").currentSchema("test").build());
     Assert.assertEquals(replaceLastEnter(ResourceFileUtils.getText("parse-test/"
-            + outputExceptFileName)), replaceLastEnter(relalgNode.explain()));
+        + outputExceptFileName)), replaceLastEnter(relalgNode.explain()));
   }
 }

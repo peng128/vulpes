@@ -20,6 +20,7 @@ import net.peng.vulpes.common.type.BigIntType;
 import net.peng.vulpes.common.type.IntType;
 import net.peng.vulpes.common.type.VarcharType;
 import net.peng.vulpes.parser.Parser;
+import net.peng.vulpes.parser.algebraic.RelationAlgebraic;
 import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
 import net.peng.vulpes.parser.algebraic.struct.ColumnInfo;
 import net.peng.vulpes.parser.algebraic.struct.RowHeader;
@@ -46,7 +47,7 @@ public class PhysicsNodeTestBase {
   protected final String catalogTestFileBase = this.getClass().getClassLoader()
           .getResource("embedded-catalog").getPath();
 
-  protected RelalgNode parse(String inputSqlFileName, Config config) {
+  protected RelationAlgebraic parse(String inputSqlFileName, Config config) {
     CatalogManager catalogManager = CatalogManagerFactory.newInstance(config);
     return Parser.parse(ResourceFileUtils.getText("sql/" + inputSqlFileName), catalogManager,
             SessionManager.builder().config(config)
