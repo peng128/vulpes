@@ -2,8 +2,9 @@ package net.peng.vulpes.runtime.lanucher.task;
 
 import net.peng.vulpes.common.exception.ComputeException;
 import net.peng.vulpes.common.session.SessionManager;
+import net.peng.vulpes.parser.algebraic.RelationAlgebraic;
 import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
-import net.peng.vulpes.parser.algebraic.logical.RelalgSet;
+import net.peng.vulpes.parser.algebraic.meta.RelalgSet;
 import net.peng.vulpes.runtime.struct.data.OutputSegment;
 
 /**
@@ -16,10 +17,10 @@ import net.peng.vulpes.runtime.struct.data.OutputSegment;
 public class SetTaskRunner implements TaskRunner {
 
   @Override
-  public OutputSegment run(RelalgNode relalgNode, SessionManager sessionManager) {
-    if (relalgNode instanceof RelalgSet relalgSet) {
+  public OutputSegment run(RelationAlgebraic relationAlgebraic, SessionManager sessionManager) {
+    if (relationAlgebraic instanceof RelalgSet relalgSet) {
       sessionManager.getConfig().set(relalgSet.getParameter(), relalgSet.getValue());
     }
-    throw new ComputeException("无法执行set操作。输入[%s]", relalgNode);
+    throw new ComputeException("无法执行set操作。输入[%s]", relationAlgebraic);
   }
 }

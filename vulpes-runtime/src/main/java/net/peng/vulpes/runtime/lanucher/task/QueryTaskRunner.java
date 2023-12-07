@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.peng.vulpes.common.exception.ComputeException;
 import net.peng.vulpes.common.session.SessionManager;
 import net.peng.vulpes.common.utils.ObjectUtils;
+import net.peng.vulpes.parser.algebraic.RelationAlgebraic;
 import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
 import net.peng.vulpes.parser.algebraic.logical.SingleInputRelalgNode;
 import net.peng.vulpes.runtime.convertor.PhysicsNodeBuilder;
@@ -28,7 +29,10 @@ import org.apache.arrow.memory.RootAllocator;
 @Slf4j
 public class QueryTaskRunner implements TaskRunner {
   @Override
-  public OutputSegment run(RelalgNode relalgNode, SessionManager sessionManager) {
+  public OutputSegment run(RelationAlgebraic relationAlgebraic, SessionManager sessionManager) {
+    if (!(relationAlgebraic instanceof RelalgNode relalgNode)) {
+      throw new ComputeException("不能查询执行请求:%s", relationAlgebraic);
+    }
     Stopwatch stopwatch = Stopwatch.createStarted();
     fullEmptyMeta(relalgNode);
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(sessionManager.getConfig());

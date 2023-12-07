@@ -1,6 +1,7 @@
 package net.peng.vulpes.runtime.lanucher.task;
 
 import net.peng.vulpes.common.session.SessionManager;
+import net.peng.vulpes.parser.algebraic.RelationAlgebraic;
 import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
 import net.peng.vulpes.runtime.struct.data.OutputSegment;
 
@@ -17,5 +18,5 @@ public interface TaskRunner {
   /**
    * 执行输入的{@link RelalgNode}.
    */
-  OutputSegment run(RelalgNode relalgNode, SessionManager sessionManager);
+  OutputSegment run(RelationAlgebraic relationAlgebraic, SessionManager sessionManager);
 }

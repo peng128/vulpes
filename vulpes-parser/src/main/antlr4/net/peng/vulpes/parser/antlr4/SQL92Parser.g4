@@ -9,7 +9,15 @@ tokenVocab = SQL92Lexer;
 //DELIMITER
 //}
 
-query: setSpecification | querySpecification EOF;
+query: showSpecification | setSpecification | querySpecification EOF;
+
+showSpecification: showCatalogs | showSchemas | showTables;
+
+showCatalogs: SHOW CATALOG;
+
+showSchemas: SHOW SCHEMA;
+
+showTables: SHOW TABLE;
 
 setSpecification: SET parameterName=IDENTIFIER EQUALS? parameterValue=IDENTIFIER;
 

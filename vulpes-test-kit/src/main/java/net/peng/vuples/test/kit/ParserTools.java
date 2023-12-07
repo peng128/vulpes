@@ -19,8 +19,8 @@ public class ParserTools {
    * 从文件读取关系表达式.
    */
   public static RelalgNode parse(String inputSqlFileName) {
-    return Parser.parse(ResourceFileUtils.getText("parse-test/" + inputSqlFileName), null,
-            SessionManager.builder().config(new Config(new Properties()))
-                    .currentCatalog("embedded-catalog").currentSchema("test").build());
+    return (RelalgNode) Parser.parse(ResourceFileUtils.getText("parse-test/" + inputSqlFileName),
+        null, SessionManager.builder().config(new Config(new Properties()))
+            .currentCatalog("embedded-catalog").currentSchema("test").build());
   }
 }

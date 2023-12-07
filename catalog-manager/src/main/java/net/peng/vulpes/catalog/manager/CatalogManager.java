@@ -1,5 +1,6 @@
 package net.peng.vulpes.catalog.manager;
 
+import lombok.Getter;
 import net.peng.vulpes.catalog.Catalog;
 import net.peng.vulpes.catalog.loader.CatalogLoader;
 import net.peng.vulpes.catalog.table.TableMeta;
@@ -15,6 +16,7 @@ import net.peng.vulpes.common.model.TableIdentifier;
  */
 public class CatalogManager {
 
+  @Getter
   private final CatalogLoader catalogLoader;
 
   public CatalogManager(CatalogLoader catalogLoader) {

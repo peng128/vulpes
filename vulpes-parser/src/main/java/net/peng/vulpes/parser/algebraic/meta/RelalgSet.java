@@ -1,8 +1,9 @@
-package net.peng.vulpes.parser.algebraic.logical;
+package net.peng.vulpes.parser.algebraic.meta;
 
 import lombok.Getter;
 import lombok.ToString;
 import net.peng.vulpes.common.exception.AstConvertorException;
+import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
 import net.peng.vulpes.parser.visitor.RelalgNodeVisitor;
 
 /**
@@ -14,7 +15,7 @@ import net.peng.vulpes.parser.visitor.RelalgNodeVisitor;
  */
 @Getter
 @ToString
-public class RelalgSet extends RelalgNode {
+public class RelalgSet extends RelalgMetaNode {
 
   private final String parameter;
 
@@ -23,10 +24,5 @@ public class RelalgSet extends RelalgNode {
   public RelalgSet(String parameter, String value) {
     this.parameter = parameter;
     this.value = value;
-  }
-
-  @Override
-  public RelalgNode accept(RelalgNodeVisitor relalgNodeVisitor) {
-    throw new AstConvertorException("set关系表达式不支持迭代.");
   }
 }

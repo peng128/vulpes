@@ -28,8 +28,8 @@ public class RelalgNodeVisitorTests {
   }
 
   private RelalgNode parse(String inputSqlFileName) {
-    return Parser.parse(ResourceFileUtils.getText("parse-test/" + inputSqlFileName), null,
-                    SessionManager.builder().config(new Config(new Properties()))
-                            .currentCatalog("embedded-catalog").currentSchema("test").build());
+    return (RelalgNode) Parser.parse(ResourceFileUtils.getText("parse-test/" + inputSqlFileName),
+        null, SessionManager.builder().config(new Config(new Properties()))
+            .currentCatalog("embedded-catalog").currentSchema("test").build());
   }
 }

@@ -34,7 +34,7 @@ public class PhysicsNodeBuilderTest extends PhysicsNodeTestBase {
   @Test
   public void builderTest() {
     Config config = buildConfig();
-    RelalgNode relalgNode = parse("sql1.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("sql1.sql", config);
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNode = physicsNodeBuilder.build(relalgNode);
     Assert.assertEquals(1, executorNode.size());
@@ -44,7 +44,7 @@ public class PhysicsNodeBuilderTest extends PhysicsNodeTestBase {
   @Test
   public void builderJoinTest() {
     Config config = buildConfig();
-    RelalgNode relalgNode = parse("sql4.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("sql4.sql", config);
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNode = physicsNodeBuilder.build(relalgNode);
     Assert.assertEquals(3, executorNode.size());
@@ -54,7 +54,7 @@ public class PhysicsNodeBuilderTest extends PhysicsNodeTestBase {
   @Test
   public void builderParameterTest() {
     Config config = buildConfig();
-    RelalgNode relalgNode = parse("parameter.sql", config);
+    RelalgNode relalgNode = (RelalgNode) parse("parameter.sql", config);
     PhysicsNodeBuilder physicsNodeBuilder = new PhysicsNodeBuilder(config);
     List<ExecutorNode> executorNode = physicsNodeBuilder.build(relalgNode);
     Assert.assertEquals(1, executorNode.size());
