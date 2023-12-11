@@ -42,7 +42,7 @@ public class AuthHandler implements ResponseHandler {
       authPacket.read(bytes);
     }
     log.debug("Auth: {}", authPacket);
-    if (!authPacket.clientAuthPlugin.equalsIgnoreCase(JdbcServer.DEFAULT_AUTH_PLUGIN_NAME_STRING)) {
+    if (authPacket.clientAuthPlugin.equalsIgnoreCase(JdbcServer.DEFAULT_AUTH_PLUGIN_NAME_STRING)) {
       final byte packetId = 3;
       int size = 3;
       size += JdbcServer.DEFAULT_AUTH_PLUGIN_NAME.length;
