@@ -42,27 +42,27 @@ public class AuthHandler implements ResponseHandler {
       authPacket.read(bytes);
     }
     log.debug("Auth: {}", authPacket);
-    if (authPacket.clientAuthPlugin.equalsIgnoreCase(JdbcServer.DEFAULT_AUTH_PLUGIN_NAME_STRING)) {
-      final byte packetId = 3;
-      int size = 3;
-      size += JdbcServer.DEFAULT_AUTH_PLUGIN_NAME.length;
-      //size += jdbcServerHandler.getSeed().length;
-      ByteBuffer buffer = ByteBuffer.allocate(size);
-      BufferUtil.writeUb3(buffer, size);
-      buffer.put(packetId);
-      buffer.put(JdbcServer.STATUS);
-      BufferUtil.writeWithNull(buffer, JdbcServer.DEFAULT_AUTH_PLUGIN_NAME);
-      //BufferUtil.writeWithNull(buffer, jdbcServerHandler.getSeed());
-      ByteBuf resultBuf = ctx.alloc().buffer(buffer.array().length);
-      resultBuf.writeBytes(buffer.array());
-      return resultBuf;
-    } else {
+//    if (authPacket.clientAuthPlugin.equalsIgnoreCase(JdbcServer.DEFAULT_AUTH_PLUGIN_NAME_STRING)) {
+//      final byte packetId = 3;
+//      int size = 3;
+//      size += JdbcServer.DEFAULT_AUTH_PLUGIN_NAME.length;
+//      //size += jdbcServerHandler.getSeed().length;
+//      ByteBuffer buffer = ByteBuffer.allocate(size);
+//      BufferUtil.writeUb3(buffer, size);
+//      buffer.put(packetId);
+//      buffer.put(JdbcServer.STATUS);
+//      BufferUtil.writeWithNull(buffer, JdbcServer.DEFAULT_AUTH_PLUGIN_NAME);
+//      //BufferUtil.writeWithNull(buffer, jdbcServerHandler.getSeed());
+//      ByteBuf resultBuf = ctx.alloc().buffer(buffer.array().length);
+//      resultBuf.writeBytes(buffer.array());
+//      return resultBuf;
+//    } else {
       ByteBuffer buffer = ByteBuffer.allocate(JdbcServer.AUTH_OK.length);
       buffer.put(JdbcServer.AUTH_OK);
       ByteBuf resultBuf = ctx.alloc().buffer(buffer.array().length);
       resultBuf.writeBytes(buffer.array());
       jdbcServerHandler.switchToCommandHandler();
       return resultBuf;
-    }
+//    }
   }
 }
