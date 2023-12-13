@@ -3,7 +3,11 @@ package net.peng.vulpes.runtime.physics;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import net.peng.vulpes.common.function.aggregate.SumFunction;
+import net.peng.vulpes.common.session.SessionManager;
 import net.peng.vulpes.common.type.BigIntType;
+import net.peng.vulpes.parser.algebraic.expression.ColumnNameExpr;
+import net.peng.vulpes.parser.algebraic.expression.FunctionRef;
+import net.peng.vulpes.parser.algebraic.expression.IdentifierExpr;
 import net.peng.vulpes.parser.algebraic.struct.ColumnInfo;
 import net.peng.vulpes.parser.algebraic.struct.RowHeader;
 import net.peng.vulpes.runtime.PhysicsNodeTestBase;
@@ -31,31 +35,36 @@ public class AggregateExecutorNodeTests extends PhysicsNodeTestBase {
     BufferAllocator allocator = new RootAllocator();
     MemorySpace memorySpace = MemorySpace.builder().allocator(allocator).build();
     // 准备数据
-    List<VectorSchemaRoot> data = readData("data/table1.csv", FileFormat.CSV, memorySpace);
-    long originalMemory = memorySpace.getAllocator().getAllocatedMemory();
+    final List<VectorSchemaRoot> data = readData("data/table1.csv", FileFormat.CSV, memorySpace);
+    final long originalMemory = memorySpace.getAllocator().getAllocatedMemory();
     System.out.println(memorySpace.getAllocator().getAllocatedMemory() + " bytes");
     // 执行聚合逻辑
     RowHeader rowHeader = getTableRowHeader();
+    ColumnNameExpr idColumn = ColumnNameExpr.create(IdentifierExpr.create("id"));
+    idColumn.fillColumnInfo(rowHeader);
+    //聚合函数
+    final FunctionRef sum = FunctionRef.create("sum", SessionManager.builder().build(), idColumn);
+    sum.fillColumnInfo(rowHeader);
     AggregateExecutorNode aggregateExecutorNode = new AggregateExecutorNode(null,
-            ImmutableList.of(2),
-            ImmutableList.of(new SumFunction(ImmutableList.of(0), "sum_col")), rowHeader,
-            new RowHeader(ImmutableList.of(
-                    ColumnInfo.builder().name("age").dataType(new BigIntType()).build(),
-                    ColumnInfo.builder().name("sum_col").dataType(new BigIntType()).build())));
+        ImmutableList.of(2),
+        ImmutableList.of(sum),
+        rowHeader, new RowHeader(ImmutableList.of(
+        ColumnInfo.builder().name("age").dataType(new BigIntType()).build(),
+        ColumnInfo.builder().name("sum_col").dataType(new BigIntType()).build())));
     List<VectorSchemaRoot> result =
-            ((ArrowSegment) aggregateExecutorNode.executeSingleInput(new ArrowSegment(data),
-                    memorySpace)).get();
+        ((ArrowSegment) aggregateExecutorNode.executeSingleInput(new ArrowSegment(data),
+            memorySpace)).get();
     System.out.println(memorySpace.getAllocator().getAllocatedMemory() + " bytes");
     // 检查结果，过滤后内存要小于或等于过滤前内存.
     assert memorySpace.getAllocator().getAllocatedMemory() <= originalMemory;
     Assert.assertEquals("""
-            [ age\tsum_col
-            24\t5
-            41\t5
-            ,  age\tsum_col
-            30\t2
-            18\t3
-            ]""", result.stream().map(VectorSchemaRoot::contentToTSVString).toList().toString());
+        [age\tAGG_OUTPUT_0
+        18\t3
+        24\t5
+        30\t2
+        , age\tAGG_OUTPUT_0
+        41\t5
+        ]""", result.stream().map(VectorSchemaRoot::contentToTSVString).toList().toString());
     AutoCloseables.close(result);
     allocator.close();
   }

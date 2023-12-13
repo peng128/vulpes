@@ -24,7 +24,6 @@ public class BucketDistributeMap<K, V> implements DistributeMap<K, V> {
    * 初始化分桶map空间.
    */
   public BucketDistributeMap(Integer bucketNum) {
-    Map<K, V> data = new ConcurrentHashMap<>();
     this.bucketNum = bucketNum;
     this.bucketData = new ConcurrentHashMap<>(bucketNum);
     for (Integer i = 0; i < bucketNum; i++) {

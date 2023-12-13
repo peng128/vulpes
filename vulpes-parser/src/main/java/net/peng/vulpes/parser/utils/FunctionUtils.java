@@ -13,11 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.peng.vulpes.common.exception.AstConvertorException;
 import net.peng.vulpes.common.function.Function;
 import net.peng.vulpes.common.function.FunctionName;
+import net.peng.vulpes.common.function.aggregate.AggregateFunction;
 import net.peng.vulpes.common.utils.ObjectUtils;
+import net.peng.vulpes.parser.algebraic.expression.AliasExpr;
 import net.peng.vulpes.parser.algebraic.expression.FunctionRef;
 import net.peng.vulpes.parser.algebraic.expression.RelalgExpr;
 import net.peng.vulpes.parser.algebraic.struct.RowHeader;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Description of FunctionUtils.
@@ -31,6 +34,19 @@ import org.apache.commons.lang3.StringUtils;
 public class FunctionUtils {
 
   public static final String EVAL_FUNCTION_NAME = "eval";
+
+  /**
+   * 判断传入表达式是否是聚合函数.
+   */
+  public static Boolean isAggFunction(RelalgExpr relalgExpr) {
+    if (relalgExpr instanceof AliasExpr aliasExpr) {
+      return isAggFunction(aliasExpr.getRelalgExpr());
+    }
+    if (!(relalgExpr instanceof FunctionRef functionRef)) {
+      return false;
+    }
+    return functionRef.getFunction() instanceof AggregateFunction;
+  }
 
   /**
    * 检查函数输入获取函数输出类型.
@@ -54,16 +70,24 @@ public class FunctionUtils {
   }
 
   /**
-   * 获取对应函数的执行方法.
+   * 获取对应函数的Eval执行方法.
    */
   public static Method getEvalMethod(String functionName, Function function,
                                      Class<?>... parameterTypes) {
+    return getMethod(functionName, function, EVAL_FUNCTION_NAME, parameterTypes);
+  }
+
+  /**
+   * 获取对应函数的执行方法.
+   */
+  public static Method getMethod(String functionName, Function function, String methodName,
+                                     Class<?>... parameterTypes) {
     try {
       assert function != null;
-      return function.getClass().getDeclaredMethod(EVAL_FUNCTION_NAME, parameterTypes);
+      return function.getClass().getDeclaredMethod(methodName, parameterTypes);
     } catch (NoSuchMethodException e) {
       final Method[] declaredMethods = function.getClass().getDeclaredMethods();
-      Method method = subclassCompatible(declaredMethods, parameterTypes);
+      Method method = subclassCompatible(declaredMethods, methodName, parameterTypes);
       if (ObjectUtils.isNotNull(method)) {
         return method;
       }
@@ -72,7 +96,7 @@ public class FunctionUtils {
               .append("]输入类型不正确,目前输入类型为\n");
       errorMessageBuilder.append(Arrays.toString(parameterTypes)).append("\n可以是以下输入:\n");
       for (Method declaredMethod : declaredMethods) {
-        if (!declaredMethod.getName().equals(EVAL_FUNCTION_NAME)) {
+        if (!declaredMethod.getName().equals(methodName)) {
           continue;
         }
         errorMessageBuilder.append("[");
@@ -89,9 +113,10 @@ public class FunctionUtils {
   /**
    * 判断对应eval方法中是否包含输入类型的父类型.
    */
-  private static Method subclassCompatible(Method[] declaredMethods, Class<?>... parameterTypes) {
+  private static Method subclassCompatible(Method[] declaredMethods, String methodName,
+                                           Class<?>... parameterTypes) {
     for (Method method : declaredMethods) {
-      if (method.getName().equalsIgnoreCase(EVAL_FUNCTION_NAME)
+      if (method.getName().equalsIgnoreCase(methodName)
               && ObjectUtils.allSubClass(parameterTypes, method.getParameterTypes())) {
         return method;
       }
@@ -186,5 +211,22 @@ public class FunctionUtils {
     }
 
     return classes;
+  }
+
+  /**
+   * 找到输入列表中是聚合函数的列，返回key为是否都是聚合函数，value是不是聚合函数的列表.
+   */
+  public static Pair<Boolean, List<RelalgExpr>> allAggFunctions(List<RelalgExpr> relalgExprList) {
+    // TODO： 这里要考虑table函数.
+    List<RelalgExpr> scalarExprList = new ArrayList<>();
+    boolean allAgg = true;
+    for (RelalgExpr relalgExpr : relalgExprList) {
+      if (FunctionUtils.isAggFunction(relalgExpr)) {
+        continue;
+      }
+      allAgg = false;
+      scalarExprList.add(relalgExpr);
+    }
+    return Pair.of(allAgg, scalarExprList);
   }
 }

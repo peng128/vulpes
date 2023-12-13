@@ -3,12 +3,14 @@ package net.peng.vulpes.runtime;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.peng.vulpes.common.configuration.Config;
+import net.peng.vulpes.common.session.SessionManager;
 import net.peng.vulpes.common.utils.ObjectUtils;
 import net.peng.vulpes.parser.algebraic.logical.InputRelalgNode;
 import net.peng.vulpes.parser.algebraic.logical.RelalgNode;
 import net.peng.vulpes.parser.algebraic.logical.SingleInputRelalgNode;
 import net.peng.vulpes.runtime.convertor.PhysicsNodeBuilder;
 import net.peng.vulpes.runtime.framework.local.LocalPipelineChain;
+import net.peng.vulpes.runtime.lanucher.StatementRunner;
 import net.peng.vulpes.runtime.memory.MemorySpace;
 import net.peng.vulpes.runtime.physics.base.ExecutorNode;
 import net.peng.vulpes.runtime.struct.data.OutputSegment;
@@ -153,5 +155,27 @@ public class End2EndTests extends PhysicsNodeTestBase {
     }
     allocator.close();
     System.out.println("run end " + (System.currentTimeMillis() - start) + " ms");
+  }
+
+  @Test
+  public void sql5Test() {
+    Config config = buildConfig();
+    StatementRunner statementRunner = new StatementRunner();
+    final OutputSegment outputSegment = statementRunner
+        .run(ResourceFileUtils.getText("sql/sql5.sql"),
+        SessionManager.builder().config(config).currentCatalog("embedded-catalog")
+            .currentSchema("test").build());
+    System.out.println(outputSegment);
+  }
+
+  @Test
+  public void sql6Test() {
+    Config config = buildConfig();
+    StatementRunner statementRunner = new StatementRunner();
+    final OutputSegment outputSegment = statementRunner
+        .run(ResourceFileUtils.getText("sql/sql6" + ".sql"),
+        SessionManager.builder().config(config).currentCatalog("embedded-catalog")
+            .currentSchema("test").build());
+    System.out.println(outputSegment);
   }
 }

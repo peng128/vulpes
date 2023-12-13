@@ -149,7 +149,7 @@ parameterReference: AT_SIGNAL AT_SIGNAL columnReference;
 
 qualifier: tableName| correlationName;
 
-function: functionName LEFT_PAREN valueExpression (COMMA valueExpression)* RIGHT_PAREN;
+function: functionName LEFT_PAREN (valueExpression (COMMA valueExpression)*)? RIGHT_PAREN;
 
 functionName: IDENTIFIER | functionWord;
 
