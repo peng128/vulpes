@@ -1,11 +1,8 @@
 package net.peng.vulpes.common.function.aggregate;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 import net.peng.vulpes.common.function.FunctionName;
-import net.peng.vulpes.common.function.MiddleState;
-import net.peng.vulpes.common.utils.ObjectUtils;
 
 /**
  * Description of SumFunction.
@@ -17,63 +14,38 @@ import net.peng.vulpes.common.utils.ObjectUtils;
 @FunctionName(name = "sum")
 @Getter
 @ToString
-public class SumFunction extends AggregateFunction<Long> {
+public class SumFunction extends AggregateFunction {
 
-  private List<Integer> inputColumnIndex;
-
-  private String outputName;
-
-  private MiddleState<Long> state;
-
-  @Deprecated
-  public SumFunction(List<Integer> inputColumnIndex, String outputName) {
-    this.inputColumnIndex = inputColumnIndex;
-    this.outputName = outputName;
-  }
-
-  public SumFunction() {
-  }
+  private Long sumState;
 
   //TODO
   public Long eval(Integer a) {
-    state.merge(Long.getLong(String.valueOf(a)));
-    return state.get();
+    return sumState;
   }
 
   //TODO
   public Long eval(Long a) {
-    state.merge(a);
-    return state.get();
+    return sumState;
   }
 
-  @Override
-  public MiddleState<Long> initState() {
-    if (ObjectUtils.isNull(state)) {
-      state = new SumState();
-    }
-    return state;
+  public void init() {
+    sumState = 0L;
   }
 
-  /**
-   * 求和计算的中间状态.
-   */
-  public static class SumState implements MiddleState<Long> {
-
-    private Long state = 0L;
-
-    @Override
-    public Long get() {
-      return state;
-    }
-
-    @Override
-    public void set(Long input) {
-      state = input;
-    }
-
-    @Override
-    public void merge(Long input) {
-      state += input;
-    }
+  public void merge(Long a) {
+    sumState += a;
   }
+
+  public void merge(Integer a) {
+    sumState += a;
+  }
+
+  public Long get() {
+    return sumState;
+  }
+
+  public Long getState() {
+    return sumState;
+  }
+
 }

@@ -9,6 +9,7 @@ import net.peng.vulpes.common.function.aggregate.SumFunction;
 import net.peng.vulpes.common.model.DataFormat;
 import net.peng.vulpes.common.model.TableIdentifier;
 import net.peng.vulpes.common.session.SessionManager;
+import net.peng.vulpes.common.type.IntType;
 import net.peng.vulpes.common.type.VarcharType;
 import net.peng.vulpes.parser.algebraic.expression.ColumnNameExpr;
 import net.peng.vulpes.parser.algebraic.expression.FunctionRef;
@@ -129,7 +130,7 @@ public class ConvertorTests {
     final RowHeader rowHeader = new RowHeader(ImmutableList.of(
             ColumnInfo.builder().name(columnName1).dataType(new VarcharType()).build(),
             ColumnInfo.builder().name(columnName2).dataType(new VarcharType()).build(),
-            ColumnInfo.builder().name(columnName3).dataType(new VarcharType()).build()));
+            ColumnInfo.builder().name(columnName3).dataType(new IntType()).build()));
     columnNameExpr1.fillColumnInfo(rowHeader);
     columnNameExpr2.fillColumnInfo(rowHeader);
     columnNameExpr3.fillColumnInfo(rowHeader);
@@ -143,8 +144,12 @@ public class ConvertorTests {
     final Config config = new Config(new Properties());
     final ExecutorNode executorNode = AggregateToExecutorNode.CONVERTOR.convert(relalgNode,
             config, null);
+    ColumnNameExpr idColumn = ColumnNameExpr.create(IdentifierExpr.create("col3"));
+    idColumn.fillColumnInfo(rowHeader);
+    //聚合函数
+    final FunctionRef sum = FunctionRef.create("sum", SessionManager.builder().build(), idColumn);
     final AggregateExecutorNode except = new AggregateExecutorNode(null, ImmutableList.of(0, 1),
-            ImmutableList.of(new SumFunction(ImmutableList.of(2), null)), rowHeader, rowHeader);
+            ImmutableList.of(sum), rowHeader, rowHeader);
     Assert.assertEquals(except.toString(), executorNode.toString());
   }
 }
