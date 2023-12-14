@@ -8,5 +8,5 @@ package net.peng.vulpes.common.model;
  * @since 2023/10/24
  */
 public enum DataFormat {
-  PARQUET, ORC, CSV
+  PARQUET, ORC, CSV, ARROW_IPC
 }

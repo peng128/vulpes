@@ -5,27 +5,27 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.peng</groupId>
-        <artifactId>vulpes</artifactId>
+        <artifactId>vulpes-catalog</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>vulpes-launcher</artifactId>
+    <artifactId>vulpes-catalog-arrow-file</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>net.peng</groupId>
-            <artifactId>vulpes-runtime</artifactId>
+            <artifactId>catalog-manager</artifactId>
             <version>${parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.peng</groupId>
-            <artifactId>vulpes-catalog-arrow-file</artifactId>
-            <version>${parent.version}</version>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-dataset</artifactId>
+            <version>${arrow.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.peng</groupId>
-            <artifactId>vulpes-jdbc-server-mysql</artifactId>
-            <version>${parent.version}</version>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-memory-unsafe</artifactId>
+            <version>${arrow.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
