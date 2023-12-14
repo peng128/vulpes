@@ -2,5 +2,9 @@
 target/
 *.log
 .idea/
+*.tokens
 *.iml
 .DS_Store
+/vulpes-parser/gen/
+/vulpes-parser/src/main/antlr4/net/peng/vulpes/parser/antlr4/gen/
+/tpch/

@@ -11,3 +11,6 @@ vuples-lanucher 模块下测试方法TestMain可直接运行即可启动服务�
 
 可测试sql
 ```select "name", age, gender, "type" from table1 t1 join table2 t2 on t1.id = t2.id```
+
+### 测试数据生成
+在```vulpes-benchmark```模块中, 运行测试用例TpchGeneratorTests可以生成Arrow类型的测试数据在项目目录下的tpch目录.
