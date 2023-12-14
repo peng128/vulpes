@@ -21,6 +21,13 @@ public class BucketDistributeMap<K, V> implements DistributeMap<K, V> {
   private final Map<Integer, Map<K, V>> bucketData;
 
   /**
+   * 加入桶的缓存，这里bucket的get会有cpu消耗，如何先进行contain验证，在进行put或get操作，缓存会派上用场.
+   */
+  private Map<K, V> bucketCache;
+
+  private int bucketCacheKey = -1;
+
+  /**
    * 初始化分桶map空间.
    */
   public BucketDistributeMap(Integer bucketNum) {
@@ -52,6 +59,12 @@ public class BucketDistributeMap<K, V> implements DistributeMap<K, V> {
   }
 
   protected Map<K, V> getData(K key) {
-    return bucketData.get(key.hashCode() % bucketNum);
+    final int bucketIndex = key.hashCode() % bucketNum;
+    if (bucketIndex == bucketCacheKey) {
+      return bucketCache;
+    }
+    bucketCacheKey = bucketIndex;
+    bucketCache = bucketData.get(key.hashCode() % bucketNum);
+    return bucketCache;
   }
 }

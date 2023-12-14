@@ -113,6 +113,9 @@ public class AggregateExecutorNode extends ComputeExecutorNode {
     Iterator<List<Map.Entry<Row, Function[]>>> bucketIterator = stateMap.fetchAll();
     while (bucketIterator.hasNext()) {
       List<Map.Entry<Row, Function[]>> dataList = bucketIterator.next();
+      if (dataList.isEmpty()) {
+        continue;
+      }
       List<FieldVector> outputVectors = new ArrayList<>();
       for (Integer byIndex : groupByIndex) {
         final FieldVector fieldVector = VectorBuilderUtils.buildFiledVector(

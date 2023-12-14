@@ -89,7 +89,7 @@ public class PhysicsNodeTestBase {
   protected List<VectorSchemaRoot> readData(String fileName, FileFormat fileFormat,
                                     MemorySpace memorySpace) {
     Properties properties = new Properties();
-    properties.put(ConfigItems.FILE_READ_ROW_BATCH_SIZE.name(), 3L);
+    //properties.put(ConfigItems.FILE_READ_ROW_BATCH_SIZE.name(), 3L);
     FileReader fileReader = new FileReader(ImmutableList.of("file://" + this.getClass()
             .getClassLoader().getResource(fileName).getFile()), fileFormat,
             new Config(properties));
