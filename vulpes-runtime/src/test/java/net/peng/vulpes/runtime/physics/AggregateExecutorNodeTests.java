@@ -1,7 +1,9 @@
 package net.peng.vulpes.runtime.physics;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import net.peng.vulpes.common.function.aggregate.SumFunction;
 import net.peng.vulpes.common.session.SessionManager;
 import net.peng.vulpes.common.type.BigIntType;
@@ -67,5 +69,45 @@ public class AggregateExecutorNodeTests extends PhysicsNodeTestBase {
         ]""", result.stream().map(VectorSchemaRoot::contentToTSVString).toList().toString());
     AutoCloseables.close(result);
     allocator.close();
+  }
+
+  @Test
+  public void test2() throws Exception {
+    BufferAllocator allocator = new RootAllocator();
+    MemorySpace memorySpace = MemorySpace.builder().allocator(allocator).build();
+    // 准备数据
+    final List<VectorSchemaRoot> data = readData("data/lineitem.arrow", FileFormat.ARROW_IPC,
+        memorySpace);
+    final long originalMemory = memorySpace.getAllocator().getAllocatedMemory();
+    System.out.println(memorySpace.getAllocator().getAllocatedMemory() + " bytes");
+    // 执行聚合逻辑
+    RowHeader rowHeader = getTableRowHeader();
+    ColumnNameExpr idColumn = ColumnNameExpr.create(IdentifierExpr.create("id"));
+    idColumn.fillColumnInfo(rowHeader);
+    //聚合函数
+    final FunctionRef sum = FunctionRef.create("sum", SessionManager.builder().build(), idColumn);
+    final FunctionRef count = FunctionRef.create("count", SessionManager.builder().build());
+    sum.fillColumnInfo(rowHeader);
+    count.fillColumnInfo(rowHeader);
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    AggregateExecutorNode aggregateExecutorNode = new AggregateExecutorNode(null,
+        ImmutableList.of(),
+        ImmutableList.of(count),
+        rowHeader, new RowHeader(ImmutableList.of(
+        ColumnInfo.builder().name("sum_col").dataType(new BigIntType()).build())));
+    final List<VectorSchemaRoot> result =
+        ((ArrowSegment) aggregateExecutorNode.executeSingleInput(new ArrowSegment(data),
+            memorySpace)).get();
+    System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS) + "ms");
+    System.out.println(memorySpace.getAllocator().getAllocatedMemory() + " bytes");
+    // 检查结果，过滤后内存要小于或等于过滤前内存.
+    assert memorySpace.getAllocator().getAllocatedMemory() <= originalMemory;
+    Assert.assertEquals("""
+        [AGG_OUTPUT_0
+        6001215
+        ]""", result.stream().map(VectorSchemaRoot::contentToTSVString).toList().toString());
+    AutoCloseables.close(result);
+    allocator.close();
+    System.out.println(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS) + "ms");
   }
 }

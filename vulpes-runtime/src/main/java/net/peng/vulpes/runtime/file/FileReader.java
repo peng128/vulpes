@@ -95,7 +95,7 @@ public class FileReader implements DataFetcher {
       } catch (Exception ex) {
         throw new DataFetchException("读取文件错误, 关闭异常.", e);
       }
-      throw new DataFetchException("读取文件错误", e);
+      throw new DataFetchException("读取文件错误[%s]", e.getMessage(), e);
     } finally {
       try {
         AutoCloseables.close(recordBatches);

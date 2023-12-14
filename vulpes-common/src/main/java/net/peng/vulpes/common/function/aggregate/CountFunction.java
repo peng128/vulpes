@@ -35,9 +35,10 @@ public class CountFunction extends AggregateFunction {
    * count.
    */
   public void merge(Object a) {
-    if (ObjectUtils.isNotNull(a)) {
-      countState++;
+    if (ObjectUtils.isNull(a)) {
+      return;
     }
+    countState++;
   }
 
   /**

@@ -63,10 +63,9 @@ public class FunctionUtils {
       }
     }
     // 获取返回类型.
-    final Function function = getFunction(functionRef.getOperator(),
-            functionRef.getSessionManager().getClassLoader());
-    assert function != null;
-    return getEvalMethod(functionRef.getOperator(), function, inputClass).getReturnType();
+    assert functionRef.getFunction() != null;
+    return getEvalMethod(functionRef.getOperator(), functionRef.getFunction(), inputClass)
+        .getReturnType();
   }
 
   /**

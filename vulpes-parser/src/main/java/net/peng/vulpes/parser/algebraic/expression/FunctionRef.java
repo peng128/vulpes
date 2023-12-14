@@ -11,6 +11,7 @@ import net.peng.vulpes.common.function.Function;
 import net.peng.vulpes.common.session.SessionManager;
 import net.peng.vulpes.common.type.DataType;
 import net.peng.vulpes.common.type.VarcharType;
+import net.peng.vulpes.common.utils.ObjectUtils;
 import net.peng.vulpes.parser.algebraic.function.OperatorSymbol;
 import net.peng.vulpes.parser.algebraic.struct.ColumnInfo;
 import net.peng.vulpes.parser.algebraic.struct.RowHeader;
@@ -88,8 +89,10 @@ public class FunctionRef extends RelalgExpr {
       //TODO: 这个暂时先写死.
       dataType = new VarcharType();
     } else {
+      if (ObjectUtils.isNull(function)) {
+        function = FunctionUtils.getFunction(operator, sessionManager.getClassLoader());
+      }
       dataType = DataTypeEstimateUtils.functionResultSpeculate(this, inputHeader);
-      function = FunctionUtils.getFunction(operator, sessionManager.getClassLoader());
     }
     return ColumnInfo.builder().name(this.toString()).dataType(dataType).build();
   }

@@ -2,6 +2,7 @@ package net.peng.vulpes.runtime.function.execute.arrow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import net.peng.vulpes.common.exception.ComputeException;
 import net.peng.vulpes.common.function.Function;
@@ -45,6 +46,8 @@ public class ArrowAggregateExpression extends ArrowFunctionAbstractExpression<Vo
    */
   private final Integer thisFunctionIndex;
 
+  private final Method mergeMethod;
+
   /**
    * 聚合表达式执行器.
    */
@@ -57,6 +60,7 @@ public class ArrowAggregateExpression extends ArrowFunctionAbstractExpression<Vo
     this.groupByIndexes = groupByIndexes;
     this.totalFunctionNum = totalFunctionNum;
     this.thisFunctionIndex = thisFunctionIndex;
+    this.mergeMethod = getMergeMethod(functionRef.getFunction());
   }
 
   @Override
@@ -71,11 +75,11 @@ public class ArrowAggregateExpression extends ArrowFunctionAbstractExpression<Vo
   protected Void computeResultByFunction(Pair<List<FieldVector>, List<Integer>> itemResult,
                                          ColumnInfo columnInfo, int rowCount,
                                          List<FieldVector> data, MemorySpace memorySpace) {
-    List<FieldVector> groupByVectors = groupByIndexes.stream().map(data::get).toList();
     for (int i = 0; i < rowCount; i++) {
-      final int index = i;
-      List<Object> groupKey =
-          groupByVectors.stream().map(valueVector -> valueVector.getObject(index)).toList();
+      List<Object> groupKey = new ArrayList<>(groupByIndexes.size());
+      for (Integer groupByIndex : groupByIndexes) {
+        groupKey.add(data.get(groupByIndex).getObject(i));
+      }
       final Row key = new Row(groupKey);
       if (!stateMap.contains(key)) {
         stateMap.put(key, new Function[totalFunctionNum]);
@@ -92,7 +96,6 @@ public class ArrowAggregateExpression extends ArrowFunctionAbstractExpression<Vo
           throw new ComputeException("无法执行聚合函数合并方法[%s].", e.getMessage(), e);
         }
       }
-      Method mergeMethod = getMergeMethod(functions[thisFunctionIndex]);
       try {
         mergeMethod.invoke(functions[thisFunctionIndex], getElementData(data, itemResult, i));
       } catch (IllegalAccessException | InvocationTargetException e) {

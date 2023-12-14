@@ -27,8 +27,11 @@ import org.apache.commons.lang3.tuple.Pair;
 @ToString
 public class ArrowScalarExpression extends ArrowFunctionAbstractExpression<FieldVector> {
 
+  public final Method method;
+
   public ArrowScalarExpression(FunctionRef functionRef, RowHeader inputRowHeader) {
     super(functionRef, inputRowHeader);
+    method = getScalarMethod();
   }
 
   @Override
@@ -45,7 +48,6 @@ public class ArrowScalarExpression extends ArrowFunctionAbstractExpression<Field
       int rowCount, List<FieldVector> data, MemorySpace memorySpace) {
     FieldVector result = initResultVector(rowCount, columnInfo, memorySpace);
     // 计算
-    Method method = getScalarMethod();
     for (int i = 0; i < rowCount; i++) {
       try {
         Object resultData =

@@ -20,6 +20,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Description of ArrowFunctionAbstractExpression.
+ * TODO: 这里函数调用可以从反射改为代码生成。反射invoke会消耗cpu。换成代码生成会更快.
  *
  * @author peng
  * @version 1.0
@@ -97,8 +98,7 @@ public abstract class ArrowFunctionAbstractExpression<R>
         elements[i] = extraFunctionData.get(involvedColumnIndexes.get(i) - data.size())
             .getObject(rowIndex);
       } else {
-        elements[i] = data.get(involvedColumnIndexes.get(i))
-            .getObject(rowIndex);
+        elements[i] = data.get(involvedColumnIndexes.get(i)).getObject(rowIndex);
       }
     }
     return elements;
