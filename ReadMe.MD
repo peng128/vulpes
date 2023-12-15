@@ -1,4 +1,4 @@
-# VUPLES
+<img src=".idea/icon.png" width = "100" height = "120"><br>
 
 ### 环境
 需要 java 17

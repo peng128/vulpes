@@ -2,6 +2,7 @@
 target/
 *.log
 .idea/
+!.idea/icon.png
 *.tokens
 *.iml
 .DS_Store
