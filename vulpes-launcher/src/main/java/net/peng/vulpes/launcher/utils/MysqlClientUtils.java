@@ -4,6 +4,8 @@ import net.peng.vulpes.common.exception.ComputeException;
 import net.peng.vulpes.common.type.BigIntType;
 import net.peng.vulpes.common.type.BooleanType;
 import net.peng.vulpes.common.type.DataType;
+import net.peng.vulpes.common.type.DateType;
+import net.peng.vulpes.common.type.DoubleType;
 import net.peng.vulpes.common.type.IntType;
 import net.peng.vulpes.common.type.VarcharType;
 import net.peng.vuples.jdbc.mysql.mycat.Fields;
@@ -29,6 +31,10 @@ public class MysqlClientUtils {
       return Fields.FIELD_TYPE_LONG;
     } else if (dataType instanceof BooleanType) {
       return Fields.FIELD_TYPE_BIT;
+    } else if (dataType instanceof DoubleType) {
+      return Fields.FIELD_TYPE_DOUBLE;
+    } else if (dataType instanceof DateType) {
+      return Fields.FIELD_TYPE_DATE;
     }
     throw new ComputeException("不认识的数据类型 %s，无法发送给客户端.", dataType.getClass().getName());
   }

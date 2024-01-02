@@ -295,8 +295,15 @@ valueExpression : LITERAL | DIGITS
 | function
 | castSpecification
 | caseExpression
+| dateConstant
+| intervalExpression
 | valueExpression (PLUS | MINUS | ASTERISK | SOLIDUS) valueExpression
 | LEFT_PAREN valueExpression RIGHT_PAREN;
+
+dateConstant: DATE LITERAL;
+
+intervalExpression: INTERVAL LITERAL timeunit = (YEAR | MONTH | DAY | HOUR | MINUTE | SECOND);
+
 //TODO
 //valueExpressionPrimary: columnReference;
 /*

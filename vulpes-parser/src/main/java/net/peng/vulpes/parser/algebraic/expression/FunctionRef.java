@@ -79,6 +79,9 @@ public class FunctionRef extends RelalgExpr {
   @Override
   public ColumnInfo fillColumnInfo(RowHeader inputHeader) {
     DataType dataType;
+    for (RelalgExpr item : items) {
+      item.fillColumnInfo(inputHeader);
+    }
     //TODO: 这里考虑一下case如何实现.
     if (operator.equalsIgnoreCase(OperatorSymbol.CASE.value)) {
       List<ColumnInfo> inputColumns = items.stream().map(item -> item.fillColumnInfo(inputHeader))
@@ -86,8 +89,10 @@ public class FunctionRef extends RelalgExpr {
       dataType = DataTypeEstimateUtils.functionResultSpeculate(operator,
               inputColumns.stream().map(ColumnInfo::getDataType).toList());
     } else if (operator.equalsIgnoreCase(OperatorSymbol.CAST.name())) {
-      //TODO: 这个暂时先写死.
-      dataType = new VarcharType();
+      dataType = DataTypeEstimateUtils.convertFromPlain(items.get(1).toString());
+      if (ObjectUtils.isNull(function)) {
+        function = FunctionUtils.getFunction(operator, sessionManager.getClassLoader());
+      }
     } else {
       if (ObjectUtils.isNull(function)) {
         function = FunctionUtils.getFunction(operator, sessionManager.getClassLoader());

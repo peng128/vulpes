@@ -1,5 +1,6 @@
 package net.peng.vulpes.common.function.scalar;
 
+import java.time.LocalDate;
 import net.peng.vulpes.common.function.FunctionName;
 
 /**
@@ -26,5 +27,9 @@ public class LessAndEqualsFunction extends ScalarFunction {
 
   public Boolean eval(Long a, Integer b) {
     return a <= b;
+  }
+
+  public Boolean eval(LocalDate a, LocalDate b) {
+    return !a.isAfter(b);
   }
 }

@@ -1,0 +1,4 @@
+SELECT
+    DATE '2023-12-29' - INTERVAL '3' DAY
+FROM
+    table1

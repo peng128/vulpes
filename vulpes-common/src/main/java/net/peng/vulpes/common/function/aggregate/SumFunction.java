@@ -17,6 +17,7 @@ import net.peng.vulpes.common.function.FunctionName;
 public class SumFunction extends AggregateFunction {
 
   private Long sumState;
+  private Double doubleState;
 
   //TODO
   public Long eval(Integer a) {
@@ -28,8 +29,13 @@ public class SumFunction extends AggregateFunction {
     return sumState;
   }
 
+  public Double eval(Double a) {
+    return null;
+  }
+
   public void init() {
     sumState = 0L;
+    doubleState = 0D;
   }
 
   public void merge(Long a) {
@@ -40,7 +46,17 @@ public class SumFunction extends AggregateFunction {
     sumState += a;
   }
 
-  public Long get() {
+  public void merge(Double a) {
+    doubleState += a;
+  }
+
+  /**
+   * 获取结果.
+   */
+  public Object get() {
+    if (doubleState > sumState) {
+      return doubleState;
+    }
     return sumState;
   }
 

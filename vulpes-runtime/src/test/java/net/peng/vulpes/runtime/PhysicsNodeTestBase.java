@@ -54,6 +54,13 @@ public class PhysicsNodeTestBase {
                     .currentCatalog("embedded-catalog").currentSchema("test").build());
   }
 
+  protected String getTpchSql(String queryName) {
+    String statement = ResourceFileUtils.getText("sql/tpch/" + queryName + ".sql");
+    return statement.replaceAll("\\$\\{database}", "arrow")
+        .replaceAll("\\$\\{schema}", "tpch")
+        .replaceAll("\\$\\{prefix}", "");
+  }
+
   protected Config buildConfig() {
     Properties properties = new Properties();
     properties.put(ConfigItems.CATALOG_STATIC_CONFIG_FILE_PATH.name(),

@@ -54,7 +54,7 @@ public class ArrowScalarExpression extends ArrowFunctionAbstractExpression<Field
             method.invoke(functionRef.getFunction(), getElementData(data, itemResult, i));
         VectorBuilderUtils.setFieldVector(columnInfo, result, i, resultData);
       } catch (IllegalAccessException | InvocationTargetException e) {
-        throw new ComputeException("无法执行标量方法. %s", functionRef, e);
+        throw new ComputeException("无法执行标量方法. %s", e, functionRef);
       }
     }
     result.setValueCount(rowCount);

@@ -27,4 +27,8 @@ public class MultiplicationFunction extends ScalarFunction {
   public Long eval(Long a, Integer b) {
     return a * b;
   }
+
+  public Double eval(Double a, Double b) {
+    return a * b;
+  }
 }

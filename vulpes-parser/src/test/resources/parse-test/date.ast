@@ -1,0 +1,2 @@
+-RelalgProjection(projects=[-(2023-12-29,INTERVAL '3' DAY)])
+  -RelalgScan(tableIdentifier=embedded-catalog.test.table1)

@@ -3,6 +3,8 @@ package net.peng.vulpes.catalog.file.arrow.utils;
 import net.peng.vulpes.common.exception.DataTypeException;
 import net.peng.vulpes.common.type.BigIntType;
 import net.peng.vulpes.common.type.DataType;
+import net.peng.vulpes.common.type.DateType;
+import net.peng.vulpes.common.type.DoubleType;
 import net.peng.vulpes.common.type.IntType;
 import net.peng.vulpes.common.type.VarcharType;
 import org.apache.arrow.vector.types.pojo.ArrowType;
@@ -32,11 +34,9 @@ public class TypeConvertor {
     } else if (input.getType() instanceof ArrowType.Decimal) {
       return new BigIntType();
     } else if (input.getType() instanceof ArrowType.FloatingPoint) {
-      // TODO: 新创建这个类型
-      return new BigIntType();
+      return new DoubleType();
     } else if (input.getType() instanceof ArrowType.Date) {
-      // TODO: 新创建这个类型
-      return new VarcharType();
+      return new DateType();
     }
     throw new DataTypeException("无法找到对应类型 %s.", input.getType().getTypeID());
   }

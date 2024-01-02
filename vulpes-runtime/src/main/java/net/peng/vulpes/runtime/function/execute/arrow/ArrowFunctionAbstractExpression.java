@@ -1,12 +1,17 @@
 package net.peng.vulpes.runtime.function.execute.arrow;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import net.peng.vulpes.common.exception.ComputeException;
 import net.peng.vulpes.common.function.Function;
+import net.peng.vulpes.common.type.time.IntervalValue;
 import net.peng.vulpes.common.utils.ObjectUtils;
 import net.peng.vulpes.parser.algebraic.expression.ColumnNameExpr;
+import net.peng.vulpes.parser.algebraic.expression.DateExpr;
 import net.peng.vulpes.parser.algebraic.expression.FunctionRef;
+import net.peng.vulpes.parser.algebraic.expression.IntervalExpr;
 import net.peng.vulpes.parser.algebraic.expression.LiteralExpr;
 import net.peng.vulpes.parser.algebraic.expression.NumericExpr;
 import net.peng.vulpes.parser.algebraic.expression.RelalgExpr;
@@ -14,6 +19,8 @@ import net.peng.vulpes.parser.algebraic.struct.ColumnInfo;
 import net.peng.vulpes.parser.algebraic.struct.RowHeader;
 import net.peng.vulpes.runtime.function.execute.ExpressionExecutor;
 import net.peng.vulpes.runtime.memory.MemorySpace;
+import org.apache.arrow.vector.DateDayVector;
+import org.apache.arrow.vector.DurationVector;
 import org.apache.arrow.vector.FieldVector;
 import org.apache.arrow.vector.ValueVector;
 import org.apache.commons.lang3.tuple.Pair;
@@ -95,10 +102,32 @@ public abstract class ArrowFunctionAbstractExpression<R>
     Object[] elements = new Object[involvedColumnIndexes.size()];
     for (int i = 0; i < involvedColumnIndexes.size(); i++) {
       if (involvedColumnIndexes.get(i) >= data.size()) {
-        elements[i] = extraFunctionData.get(involvedColumnIndexes.get(i) - data.size())
-            .getObject(rowIndex);
+        if (extraFunctionData.get(involvedColumnIndexes.get(i) - data.size())
+            instanceof DurationVector) {
+          // 用于还原interval类型
+          elements[i] = IntervalValue.fromEpochMillisecond(((Duration) extraFunctionData
+              .get(involvedColumnIndexes.get(i) - data.size()).getObject(rowIndex)).toMillis());
+        } else if (extraFunctionData.get(involvedColumnIndexes.get(i) - data.size())
+            instanceof DateDayVector) {
+          // 用于还原LocalDate类型
+          elements[i] = LocalDate.ofEpochDay(((int) extraFunctionData
+              .get(involvedColumnIndexes.get(i) - data.size()).getObject(rowIndex)));
+        } else {
+          elements[i] = extraFunctionData.get(involvedColumnIndexes.get(i) - data.size())
+              .getObject(rowIndex);
+        }
       } else {
-        elements[i] = data.get(involvedColumnIndexes.get(i)).getObject(rowIndex);
+        if (data.get(involvedColumnIndexes.get(i)) instanceof DurationVector) {
+          // 用于还原interval类型
+          elements[i] = IntervalValue.fromEpochMillisecond(((Duration) data
+              .get(involvedColumnIndexes.get(i)).getObject(rowIndex)).toMillis());
+        } else if (data.get(involvedColumnIndexes.get(i)) instanceof DateDayVector) {
+          // 用于还原LocalDate类型
+          elements[i] = LocalDate.ofEpochDay(((int) data.get(involvedColumnIndexes.get(i))
+              .getObject(rowIndex)));
+        } else {
+          elements[i] = data.get(involvedColumnIndexes.get(i)).getObject(rowIndex);
+        }
       }
     }
     return elements;
@@ -116,6 +145,18 @@ public abstract class ArrowFunctionAbstractExpression<R>
       } else if (item instanceof LiteralExpr literalExpr) {
         FieldVector fieldVector = new ArrowConstantExpression(literalExpr.getLiteral(),
             literalExpr.fillColumnInfo(inputRowHeader)).execute(data, memorySpace);
+        extraFunctionData.add(fieldVector);
+        involvedColumnIndexes.add(data.size() + extraFunctionCount);
+        extraFunctionCount++;
+      } else if (item instanceof DateExpr dateExpr) {
+        FieldVector fieldVector = new ArrowConstantExpression(dateExpr.getDate(),
+            dateExpr.fillColumnInfo(inputRowHeader)).execute(data, memorySpace);
+        extraFunctionData.add(fieldVector);
+        involvedColumnIndexes.add(data.size() + extraFunctionCount);
+        extraFunctionCount++;
+      } else if (item instanceof IntervalExpr intervalExpr) {
+        FieldVector fieldVector = new ArrowConstantExpression(intervalExpr.getIntervalValue(),
+            intervalExpr.fillColumnInfo(inputRowHeader)).execute(data, memorySpace);
         extraFunctionData.add(fieldVector);
         involvedColumnIndexes.add(data.size() + extraFunctionCount);
         extraFunctionCount++;

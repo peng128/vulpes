@@ -178,4 +178,18 @@ public class End2EndTests extends PhysicsNodeTestBase {
             .currentSchema("test").build());
     System.out.println(outputSegment);
   }
+
+  @Test
+  public void tpchQuery01() {
+    final OutputSegment outputSegment = tpchQuery("q01");
+    System.out.println(outputSegment);
+  }
+
+  private OutputSegment tpchQuery(String queryName) {
+    Config config = buildConfig();
+    StatementRunner statementRunner = new StatementRunner();
+    return statementRunner.run(getTpchSql(queryName),
+            SessionManager.builder().config(config).currentCatalog("embedded-catalog")
+                .currentSchema("test").build());
+  }
 }
