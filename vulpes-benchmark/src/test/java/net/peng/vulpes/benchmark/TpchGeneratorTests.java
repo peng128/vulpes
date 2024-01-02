@@ -17,7 +17,7 @@ public class TpchGeneratorTests {
   @Test
   public void arrowGenTest() throws IOException {
     // Set the scale factor and output directory
-    double scaleFactor = 1;
+    double scaleFactor = 0.01;
     System.out.println(System.getProperty("user.dir"));
     String outputDir = "../tpch/";
     TpchDataSetGenerator.genTpchArrowData(scaleFactor, outputDir);

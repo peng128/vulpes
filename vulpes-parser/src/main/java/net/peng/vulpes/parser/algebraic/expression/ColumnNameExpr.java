@@ -51,7 +51,7 @@ public class ColumnNameExpr extends RelalgExpr {
       }
     }
     return ColumnInfo.builder()
-            .name(this.toString())
+            .name(this.getName())
             .dataType(inputHeader.getColumns().get(index).getDataType())
             .build();
   }

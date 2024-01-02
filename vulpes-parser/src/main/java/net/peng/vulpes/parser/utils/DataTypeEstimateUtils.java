@@ -1,13 +1,14 @@
 package net.peng.vulpes.parser.utils;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import net.peng.vulpes.common.exception.AstConvertorException;
-import net.peng.vulpes.common.exception.ComputeException;
-import net.peng.vulpes.common.session.SessionManager;
 import net.peng.vulpes.common.type.BigIntType;
 import net.peng.vulpes.common.type.BooleanType;
 import net.peng.vulpes.common.type.DataType;
+import net.peng.vulpes.common.type.DateType;
+import net.peng.vulpes.common.type.DoubleType;
 import net.peng.vulpes.common.type.IntType;
 import net.peng.vulpes.common.type.VarcharType;
 import net.peng.vulpes.parser.algebraic.expression.FunctionRef;
@@ -62,7 +63,31 @@ public class DataTypeEstimateUtils {
       return new VarcharType();
     } else if (type.equals(Boolean.class)) {
       return new BooleanType();
+    } else if (type.equals(LocalDate.class)) {
+      return new DateType();
+    } else if (type.equals(Double.class)) {
+      return new DoubleType();
     }
     throw new AstConvertorException("[%s]无法转换到数据类型", type);
+  }
+
+  /**
+   * 从java类型转换为数据类型.
+   */
+  public static DataType convertFromPlain(String type) {
+    switch (type.toUpperCase()) {
+      case "INTEGER":
+        return new IntType();
+      case "LONG":
+        return new BigIntType();
+      case "STRING":
+        return new VarcharType();
+      case "BOOLEAN":
+        return new BooleanType();
+      case "DATE":
+        return new DateType();
+      default:
+        throw new AstConvertorException("[%s]无法转换到数据类型", type);
+    }
   }
 }

@@ -3,3 +3,7 @@ catalogs:
     type: embedded-catalog
     prop:
       catalog.embedded.file.path: target/test-classes/embedded-catalog
+  - name: arrow
+    type: file-arrow-catalog
+    prop:
+      catalog.embedded.file.path: target/test-classes/arrow

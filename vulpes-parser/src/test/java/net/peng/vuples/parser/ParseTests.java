@@ -77,6 +77,12 @@ public class ParseTests {
   }
 
   @Test
+  public void dateTest() {
+    baseParseTest("date.sql", "date.ast");
+    baseParseWithMetaTest("date.sql", "date.ast");
+  }
+
+  @Test
   public void setTest() {
     baseParseTest("set.sql", "set.ast");
   }

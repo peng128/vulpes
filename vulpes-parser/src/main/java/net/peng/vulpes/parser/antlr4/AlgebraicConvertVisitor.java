@@ -11,9 +11,11 @@ import net.peng.vulpes.common.utils.ObjectUtils;
 import net.peng.vulpes.parser.algebraic.RelationAlgebraic;
 import net.peng.vulpes.parser.algebraic.expression.AliasExpr;
 import net.peng.vulpes.parser.algebraic.expression.ColumnNameExpr;
+import net.peng.vulpes.parser.algebraic.expression.DateExpr;
 import net.peng.vulpes.parser.algebraic.expression.FullColumnRef;
 import net.peng.vulpes.parser.algebraic.expression.FunctionRef;
 import net.peng.vulpes.parser.algebraic.expression.IdentifierExpr;
+import net.peng.vulpes.parser.algebraic.expression.IntervalExpr;
 import net.peng.vulpes.parser.algebraic.expression.LiteralExpr;
 import net.peng.vulpes.parser.algebraic.expression.NumericExpr;
 import net.peng.vulpes.parser.algebraic.expression.ParameterExpr;
@@ -345,6 +347,17 @@ public class AlgebraicConvertVisitor extends SQL92ParserBaseVisitor<RelationAlge
   @Override
   public RelationAlgebraic visitValueExpression(final ValueExpressionContext ctx) {
     return ValueExpressionBuilder.build(ctx, this, sessionManager);
+  }
+
+  @Override
+  public RelationAlgebraic visitDateConstant(SQL92Parser.DateConstantContext ctx) {
+    return DateExpr.create(ctx.LITERAL().getText().replaceAll("'", ""));
+  }
+
+  @Override
+  public RelationAlgebraic visitIntervalExpression(SQL92Parser.IntervalExpressionContext ctx) {
+    return IntervalExpr.create(Long.parseLong(ctx.LITERAL().getText()
+            .replaceAll("'", "")), ctx.timeunit.getText());
   }
 
   /**
